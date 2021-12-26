@@ -76,7 +76,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
         latestMessageText: message.text,
         messages: [...convo.messages, message],
         otherUser: convo.otherUser,
-      })
+      });
     } else {
       return convo;
     }

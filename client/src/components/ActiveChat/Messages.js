@@ -6,7 +6,7 @@ import moment from "moment";
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
 
-  const sortByDate = () => messages.sort((a, b) => moment(a.createdAt) - moment(b.createdAt))
+  const sortByDate = () => messages.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
   
   const printMessages = () =>
     sortByDate().map((message) => {
@@ -17,7 +17,7 @@ const Messages = (props) => {
       ) : (
         <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
       )
-    })
+    });
 
   return (
     <Box>
