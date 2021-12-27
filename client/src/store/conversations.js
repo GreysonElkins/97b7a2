@@ -5,6 +5,7 @@ import {
   removeOfflineUserFromStore,
   addMessageToStore,
 } from "./utils/reducerFunctions";
+import moment from "moment";
 
 // ACTIONS
 
@@ -21,7 +22,11 @@ const ADD_CONVERSATION = "ADD_CONVERSATION";
 export const gotConversations = (conversations) => {
   return {
     type: GET_CONVERSATIONS,
-    conversations,
+    conversations: conversations.map((convo) => {
+      const convoCopy = { ...convo };
+      convoCopy.messages = convo.messages.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
+      return convoCopy;
+    }),
   };
 };
 
