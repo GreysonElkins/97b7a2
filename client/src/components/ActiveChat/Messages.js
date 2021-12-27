@@ -20,20 +20,23 @@ const Messages = (props) => {
     findFinalReadMessage()
   }, [messages, findFinalReadMessage])
 
+  const printMessages = () =>
+    messages.map((message) => {
+      const time = moment(message.createdAt).format('h:mm')
+
+      return message.senderId === userId ? (
+        <>
+          <SenderBubble key={message.id} text={message.text} time={time} />
+          {message.id === finalReadMessage && <>read</>}
+        </>
+      ) : (
+        <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
+      )
+    });
+
   return (
     <Box>
-      {messages.map((message) => {
-        const time = moment(message.createdAt).format("h:mm");
-
-        return message.senderId === userId ? (
-          <>
-            <SenderBubble key={message.id} text={message.text} time={time} />
-            {message.id === finalReadMessage && <>read</>}
-          </>
-        ) : (
-          <OtherUserBubble key={message.id} text={message.text} time={time} otherUser={otherUser} />
-        );
-      })}
+      {printMessages()}
     </Box>
   );
 };
