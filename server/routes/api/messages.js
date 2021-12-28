@@ -43,4 +43,16 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.post('/mark-read', async (req, res, next) => {
+  try {
+    if (!req.user) {
+      return res.sendStatus(401)
+    }
+    const messageIds = req.body.messageIds
+    Message.update({ otherUserRead: true }, { where: { id: messageIds } })
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router;
