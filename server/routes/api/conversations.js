@@ -50,10 +50,6 @@ router.get("/", async (req, res, next) => {
     for (let i = 0; i < conversations.length; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
-      console.log(convoJSON)
-
-      // determine unreadData 
-
       // set a property "otherUser" so that frontend will have easier access
       if (convoJSON.user1) {
         convoJSON.otherUser = convoJSON.user1;
@@ -69,10 +65,32 @@ router.get("/", async (req, res, next) => {
       } else {
         convoJSON.otherUser.online = false;
       }
+      
+      // determine how many unread messages the user has
+      // and what message was most recently read by otherUser
+      const parseUnreadData = (user) => {
+        return convoJSON.messages.reduce(
+          (unread, message) => {
+            const messageCopy = { ...message }
+            if (messageCopy.senderId === convoJSON.otherUser && !messageCopy.otherUserRead) {
+              unread.count += 1
+            } else if (
+              messageCopy.senderId !== convoJSON.otherUser &&
+              messageCopy.otherUserRead
+            ) {
+              unread.latestRead = messageCopy.id
+            }
+            delete message.otherUserRead
+            return unread
+          },
+          { newReceived: 0, latestSentRead: null }
+        )
+      }
 
       // set properties for notification count and latest message preview
       const mostRecentMessage = convoJSON.messages.length - 1
       convoJSON.latestMessageText = convoJSON.messages[mostRecentMessage].text;
+      convoJSON.unread = parseUnreadData()
       conversations[i] = convoJSON;
     }
 
