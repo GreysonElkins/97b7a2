@@ -68,7 +68,7 @@ router.get("/", async (req, res, next) => {
       
       // determine how many unread messages the user has
       // and what message was most recently read by otherUser
-      const parseUnreadData = (user) => {
+      const parseUnreadData = () => {
         return convoJSON.messages.reduce(
           (unread, message) => {
             const messageCopy = { ...message }
@@ -92,6 +92,7 @@ router.get("/", async (req, res, next) => {
       const mostRecentMessage = convoJSON.messages.length - 1
       convoJSON.latestMessageText = convoJSON.messages[mostRecentMessage].text;
       convoJSON.unread = parseUnreadData()
+      console.log(convoJSON)
       conversations[i] = convoJSON;
     }
 
