@@ -48,6 +48,13 @@ io.on("connection", (socket) => {
     });
   });
 
+  socket.on("message-read", (data) => {
+    socket.broadcast.emit("message-read", {
+      conversationId: data.conversationId,
+      messageId: data.messageId
+    })
+  })
+
   socket.on("logout", (id) => {
     if (onlineUsers.includes(id)) {
       userIndex = onlineUsers.indexOf(id);

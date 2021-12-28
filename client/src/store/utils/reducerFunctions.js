@@ -91,3 +91,31 @@ export const countNewMessageInStore = (state, recipientId, conversationId) => {
     }
   })
 }
+
+export const setReadMessagesInStore = (state, readCount, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      convoCopy.unread.newReceived -= readCount
+      return convoCopy
+    } else {
+      return convo
+    }
+  })
+}
+
+export const setLatestReadMessageInStore = (state, conversationId, messageId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      const convoCopy = { ...convo };
+      const senderId = convoCopy.messages.find((message) => message.id === messageId).senderId
+      // determine if the notified read is from the user who didn't send the message
+      if (senderId !== convo.otherUser.id) {
+        convoCopy.unread.latestSentRead = messageId
+      }
+      return convoCopy
+    } else {
+      return convo
+    }
+  })
+}

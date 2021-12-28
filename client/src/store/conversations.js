@@ -4,8 +4,10 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
-  countNewMessageInStore
-} from "./utils/reducerFunctions";
+  countNewMessageInStore,
+  setReadMessagesInStore,
+  setLatestReadMessageInStore,
+} from './utils/reducerFunctions'
 
 // ACTIONS
 
@@ -16,7 +18,9 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
-const COUNT_NEW_MESSAGE = "COUNT_NEW_MESSAGE"
+const COUNT_NEW_MESSAGE = "COUNT_NEW_MESSAGE";
+const SET_READ_MESSAGES = "SET_READ_MESSAGES";
+const SET_LATEST_READ = "SET_LATEST_READ";
 
 // ACTION CREATORS
 
@@ -39,6 +43,22 @@ export const countNewMessage = (recipientId, conversationId) => {
     type: COUNT_NEW_MESSAGE,
     recipientId,
     conversationId
+  }
+}
+
+export const setReadMessages = (messageIds, conversationId) => {
+  return {
+    type: SET_READ_MESSAGES,
+    readCount: messageIds.length,
+    conversationId: conversationId
+  }
+}
+
+export const setLatestReadMessage = (conversationId, messageId) => {
+  return {
+    type: SET_LATEST_READ,
+    conversationId,
+    messageId
   }
 }
 
@@ -102,7 +122,23 @@ const reducer = (state = [], action) => {
         action.payload.newMessage
       );
     case COUNT_NEW_MESSAGE:
-      return countNewMessageInStore(state, action.recipientId, action.conversationId)
+      return countNewMessageInStore(
+        state, 
+        action.recipientId, 
+        action.conversationId
+      );
+    case SET_READ_MESSAGES: 
+      return setReadMessagesInStore(
+        state,
+        action.readCount,
+        action.conversationId
+      )
+    case SET_LATEST_READ: 
+      return setLatestReadMessageInStore(
+        state,
+        action.conversationId,
+        action.messageId
+      )
     default:
       return state;
   }

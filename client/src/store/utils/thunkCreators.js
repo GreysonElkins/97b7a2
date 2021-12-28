@@ -108,6 +108,35 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
+const markMessageRead = async (body) => {
+  // body should contain messageIds: number[]
+  await axios.post("/api/messages/mark-read")
+}
+
+const notifyMessageRead = (data) => {
+  // should contain the most recent message id
+  socket.emit("message-read", {
+    conversationId: data.conversationId,
+    messageId: data.messageId
+  })
+}
+
+export const readMessages = (messageIds, conversationId) => async (dispatch) => {
+  try {
+    const reqBody = { messageIds }
+    await markMessageRead(reqBody)
+    const latestMessage = messageIds[messageIds.length - 1]
+    const notifyData = {
+      messageId: latestMessage.id,
+      conversationId
+    }
+    notifyMessageRead(notifyData)
+    // dispatch(setReadMessages(messageIds, conversationId))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const searchUsers = (searchTerm) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/users/${searchTerm}`);
