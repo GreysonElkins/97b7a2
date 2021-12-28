@@ -79,3 +79,15 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const countNewMessageInStore = (state, recipientId, conversationId) => {
+  return state.map((convo) => {
+    if (convo.id === conversationId && recipientId !== convo.otherUser.id) {
+      const convoCopy = { ...convo };
+      convoCopy.unread.newReceived += 1
+      return convoCopy
+    } else {
+      return convo
+    }
+  })
+}

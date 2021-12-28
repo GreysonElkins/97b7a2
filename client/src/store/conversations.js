@@ -4,6 +4,7 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
+  countNewMessageInStore
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -15,6 +16,7 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
+const COUNT_NEW_MESSAGE = "COUNT_NEW_MESSAGE"
 
 // ACTION CREATORS
 
@@ -31,6 +33,14 @@ export const setNewMessage = (message, sender) => {
     payload: { message, sender: sender || null },
   };
 };
+
+export const countNewMessage = (recipientId, conversationId) => {
+  return {
+    type: COUNT_NEW_MESSAGE,
+    recipientId,
+    conversationId
+  }
+}
 
 export const addOnlineUser = (id) => {
   return {
@@ -91,6 +101,8 @@ const reducer = (state = [], action) => {
         action.payload.recipientId,
         action.payload.newMessage
       );
+    case COUNT_NEW_MESSAGE:
+      return countNewMessageInStore(state, action.recipientId, action.conversationId)
     default:
       return state;
   }
