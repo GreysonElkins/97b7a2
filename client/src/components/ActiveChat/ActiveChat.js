@@ -24,8 +24,8 @@ const useStyles = makeStyles(() => ({
 const ActiveChat = (props) => {
   const classes = useStyles();
   const { user } = props;
-  const conversation = useMemo(() => props.conversation || {}, [props]);
-  const readMessages = useMemo(() => props.readMessages || {}, [props]);
+  const conversation = useMemo(() => props.conversation || {}, [props.conversation]);
+  const readMessages = useMemo(() => props.readMessages || {}, [props.readMessages]);
 
   useEffect(() => {
     if (!conversation || !conversation.unread || conversation.unread.messages.length === 0) return
@@ -44,7 +44,7 @@ const ActiveChat = (props) => {
             <Messages
               messages={conversation.messages}
               otherUser={conversation.otherUser}
-              latestRead={conversation.unread.latestSentRead}
+              latestRead={conversation.unread?.latestSentRead}
               userId={user.id}
             />
             <Input
