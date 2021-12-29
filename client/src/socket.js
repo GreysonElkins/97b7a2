@@ -20,10 +20,12 @@ socket.on("connect", () => {
   socket.on("remove-offline-user", (id) => {
     store.dispatch(removeOfflineUser(id));
   });
+
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
-    store.dispatch(countNewMessage(data.recipientId, data.message.conversationId))
+    store.dispatch(countNewMessage(data.recipientId, data.message))
   });
+
   socket.on("message-read", (data) => {
     store.dispatch(setLatestReadMessage(data.conversationId, data.messageId))
   })
