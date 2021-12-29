@@ -38,11 +38,11 @@ export const setNewMessage = (message, sender) => {
   };
 };
 
-export const countNewMessage = (recipientId, conversationId) => {
+export const countNewMessage = (recipientId, message) => {
   return {
     type: COUNT_NEW_MESSAGE,
     recipientId,
-    conversationId
+    message
   }
 }
 
@@ -125,7 +125,7 @@ const reducer = (state = [], action) => {
       return countNewMessageInStore(
         state, 
         action.recipientId, 
-        action.conversationId
+        action.message
       );
     case SET_READ_MESSAGES: 
       return setReadMessagesInStore(
