@@ -6,13 +6,19 @@ export const addMessageToStore = (state, payload) => {
       id: message.conversationId,
       otherUser: sender,
       messages: [message],
+      unread: {
+        newReceived: 0,
+        messages: [message.id],
+        latestSentRead: message.id
+      }
     };
     newConvo.latestMessageText = message.text;
     return [newConvo, ...state];
   }
 
   return state.map((convo) => {
-    if (convo.id === message.conversationId) {
+    // this was being called twice by the "new-message" socket
+    if (convo.id === message.conversationId && !convo.messages.some(oldMessage => oldMessage.id === message.id )) { 
       const convoCopy = { ...convo }
       convoCopy.latestMessageText = message.text
       convoCopy.messages.push(message)
@@ -80,11 +86,12 @@ export const addNewConvoToStore = (state, recipientId, message) => {
   });
 };
 
-export const countNewMessageInStore = (state, recipientId, conversationId) => {
+export const countNewMessageInStore = (state, recipientId, message) => {
   return state.map((convo) => {
-    if (convo.id === conversationId && recipientId !== convo.otherUser.id) {
+    if (convo.id === message.conversationId && recipientId !== convo.otherUser.id) {
       const convoCopy = { ...convo };
       convoCopy.unread.newReceived += 1
+      convoCopy.unread.messages.push(message.id)
       return convoCopy
     } else {
       return convo
@@ -96,7 +103,10 @@ export const setReadMessagesInStore = (state, readCount, conversationId) => {
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
-      convoCopy.unread.newReceived -= readCount
+      if (convoCopy.unread.newReceived > 0) {
+        convoCopy.unread.newReceived -= readCount
+        convoCopy.unread.messages = []
+      }
       return convoCopy
     } else {
       return convo
@@ -108,7 +118,7 @@ export const setLatestReadMessageInStore = (state, conversationId, messageId) =>
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
-      const senderId = convoCopy.messages.find((message) => message.id === messageId).senderId
+      const senderId = convoCopy.messages.find((message) => message.id === messageId)
       // determine if the notified read is from the user who didn't send the message
       if (senderId !== convo.otherUser.id) {
         convoCopy.unread.latestSentRead = messageId
