@@ -7,7 +7,7 @@ export const addMessageToStore = (state, payload) => {
       otherUser: sender,
       messages: [message],
       unread: {
-        newReceived: 0,
+        newReceivedCount: 0,
         messages: [message.id],
         latestSentRead: message.id
       }
@@ -90,7 +90,7 @@ export const countNewMessageInStore = (state, recipientId, message) => {
   return state.map((convo) => {
     if (convo.id === message.conversationId && recipientId !== convo.otherUser.id) {
       const convoCopy = { ...convo };
-      convoCopy.unread.newReceived += 1
+      convoCopy.unread.newReceivedCount += 1
       convoCopy.unread.messages.push(message.id)
       return convoCopy
     } else {
@@ -103,8 +103,8 @@ export const setReadMessagesInStore = (state, readCount, conversationId) => {
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
-      if (convoCopy.unread.newReceived > 0) {
-        convoCopy.unread.newReceived -= readCount
+      if (convoCopy.unread.newReceivedCount > 0) {
+        convoCopy.unread.newReceivedCount -= readCount
         convoCopy.unread.messages = []
       }
       return convoCopy
