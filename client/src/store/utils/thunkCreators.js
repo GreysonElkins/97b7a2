@@ -109,8 +109,8 @@ export const postMessage = (body) => async (dispatch) => {
   }
 };
 
-const markMessagesRead = async (body) => {
-  await axios.post("/api/messages/mark-read", body);
+const markMessagesRead = (body) => {
+  axios.post("/api/messages/mark-read", body);
 }
 
 const notifyMessageRead = (data) => {
@@ -123,13 +123,13 @@ const notifyMessageRead = (data) => {
 export const readMessages = (messageIds, conversationId) => async (dispatch) => {
   try {
     const reqBody = { messageIds }
-    await markMessagesRead(reqBody)
+    markMessagesRead(reqBody)
     const latestMessage = messageIds[messageIds.length - 1]
     const notifyData = {
-      messageId: latestMessage.id,
+      messageId: latestMessage,
       conversationId
     }
-    dispatch(notifyMessageRead(notifyData))
+    notifyMessageRead(notifyData)
     dispatch(setReadMessages(messageIds, conversationId))
   } catch (error) {
     console.log(error)
