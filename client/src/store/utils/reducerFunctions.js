@@ -103,7 +103,7 @@ export const setReadMessagesInStore = (state, readCount, conversationId) => {
   return state.map((convo) => {
     if (convo.id === conversationId) {
       const convoCopy = { ...convo };
-      if (convoCopy.unread.newReceivedCount > 0) {
+      if (convoCopy.unread.newReceivedCount >= readCount) {
         convoCopy.unread.newReceivedCount -= readCount
         convoCopy.unread.messages = []
       }
