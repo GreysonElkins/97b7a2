@@ -21,7 +21,7 @@ export const addMessageToStore = (state, payload) => {
     if (convo.id === message.conversationId && !convo.messages.some(oldMessage => oldMessage.id === message.id )) { 
       const convoCopy = { ...convo }
       convoCopy.latestMessageText = message.text
-      convoCopy.messages.push(message)
+      convoCopy.messages = [...convo.messages, message]
       return convoCopy
     } else {
       return convo;
@@ -78,7 +78,7 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     if (convo.otherUser.id === recipientId) {
       const convoCopy = { ...convo };
       convoCopy.latestMessageText = message.text;
-      convoCopy.messages.push(message)
+      convoCopy.messages = [...convo.messages, message]
       return convoCopy
     } else {
       return convo;

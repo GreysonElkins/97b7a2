@@ -7,8 +7,8 @@ import {
   countNewMessageInStore,
   setReadMessagesInStore,
   setLatestReadMessageInStore,
-} from './utils/reducerFunctions'
-
+} from './utils/reducerFunctions';
+import moment from "moment";
 // ACTIONS
 
 const GET_CONVERSATIONS = "GET_CONVERSATIONS";
@@ -27,7 +27,11 @@ const SET_LATEST_READ = "SET_LATEST_READ";
 export const gotConversations = (conversations) => {
   return {
     type: GET_CONVERSATIONS,
-    conversations,
+     conversations: conversations.map((convo) => {
+      const convoCopy = { ...convo };
+      convoCopy.messages = convo.messages.sort((a, b) => moment(a.createdAt) - moment(b.createdAt));
+      return convoCopy;
+    }),
   };
 };
 
