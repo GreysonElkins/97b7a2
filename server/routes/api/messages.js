@@ -43,7 +43,7 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.post('/mark-read', async (req, res, next) => {
+router.patch('/read-status', async (req, res, next) => {
   try {
     if (!req.user) {
       return res.sendStatus(401)

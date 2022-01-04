@@ -110,7 +110,7 @@ export const postMessage = (body) => async (dispatch) => {
 };
 
 const markMessagesRead = (body) => {
-  axios.post("/api/messages/mark-read", body);
+  axios.patch("/api/messages/read-status", body);
 }
 
 const notifyMessageRead = (data) => {
