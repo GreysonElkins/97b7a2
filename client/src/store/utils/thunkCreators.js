@@ -132,7 +132,7 @@ export const readMessages = (messageIds, conversationId) => async (dispatch) => 
     notifyMessageRead(notifyData)
     dispatch(setReadMessages(messageIds, conversationId))
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 
