@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
 import { Input, Header, Messages } from "./index";
@@ -26,11 +26,21 @@ const ActiveChat = (props) => {
   const { user } = props;
   const conversation = useMemo(() => props.conversation || {}, [props.conversation]);
   const readMessages = useMemo(() => props.readMessages || {}, [props.readMessages]);
+  const [error, setError] = useState(false)
+
+  const markReadMessages = useCallback(async () => {
+    try {
+      const res = await readMessages(conversation.unread.messages, conversation.id)
+      if (!res) setError(true)
+    } catch (error) {
+      console.error(error)
+    }
+  }, [])
 
   useEffect(() => {
-    if (!conversation || !conversation.unread || conversation.unread.messages.length === 0) return
-    readMessages(conversation.unread.messages, conversation.id)
-  }, [conversation, readMessages])
+    if (!conversation || !conversation.unread || conversation.unread.messages.length === 0 || error) return
+    markReadMessages()
+  }, [conversation, error, markReadMessages, readMessages])
 
   return (
     <Box className={classes.root}>
