@@ -49,7 +49,7 @@ router.patch('/read-status', async (req, res, next) => {
       return res.sendStatus(401)
     }
     const messageIds = req.body.messageIds
-    Message.update({ otherUserRead: true }, { where: { id: messageIds } })
+    Message.update({ read: true }, { where: { id: messageIds } })
   } catch (error) {
     next(error)
   }

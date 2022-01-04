@@ -72,16 +72,16 @@ router.get("/", async (req, res, next) => {
         return convoJSON.messages.reduce(
           (unread, message) => {
             const messageCopy = { ...message }
-            if (messageCopy.senderId === convoJSON.otherUser.id && !messageCopy.otherUserRead) {
+            if (messageCopy.senderId === convoJSON.otherUser.id && !messageCopy.read) {
               unread.newReceivedCount += 1
               unread.messages.push(messageCopy.id)
             } else if (
               messageCopy.senderId !== convoJSON.otherUser.id &&
-              messageCopy.otherUserRead
+              messageCopy.read
             ) {
               unread.latestSentRead = messageCopy.id
             }
-            delete message.otherUserRead
+            delete message.read
             return unread
           },
           { newReceivedCount: 0, latestSentRead: null, messages: [] }
