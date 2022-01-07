@@ -6,7 +6,7 @@ const Message = db.define('message', {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  senderId: {
+  conversationId: {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
