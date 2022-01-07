@@ -4,9 +4,11 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
-} from "./utils/reducerFunctions";
-import moment from "moment"
-
+  countNewMessageInStore,
+  setReadMessagesInStore,
+  setLatestReadMessageInStore,
+} from './utils/reducerFunctions';
+import moment from "moment";
 // ACTIONS
 
 const GET_CONVERSATIONS = "GET_CONVERSATIONS";
@@ -16,6 +18,9 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
+const COUNT_NEW_MESSAGE = "COUNT_NEW_MESSAGE";
+const SET_READ_MESSAGES = "SET_READ_MESSAGES";
+const SET_LATEST_READ = "SET_LATEST_READ";
 
 // ACTION CREATORS
 
@@ -36,6 +41,30 @@ export const setNewMessage = (message, sender) => {
     payload: { message, sender: sender || null },
   };
 };
+
+export const countNewMessage = (recipientId, message) => {
+  return {
+    type: COUNT_NEW_MESSAGE,
+    recipientId,
+    message
+  }
+}
+
+export const setReadMessages = (messageIds, conversationId) => {
+  return {
+    type: SET_READ_MESSAGES,
+    readCount: messageIds.length,
+    conversationId: conversationId
+  }
+}
+
+export const setLatestReadMessage = (conversationId, messageId) => {
+  return {
+    type: SET_LATEST_READ,
+    conversationId,
+    messageId
+  }
+}
 
 export const addOnlineUser = (id) => {
   return {
@@ -96,6 +125,24 @@ const reducer = (state = [], action) => {
         action.payload.recipientId,
         action.payload.newMessage
       );
+    case COUNT_NEW_MESSAGE:
+      return countNewMessageInStore(
+        state, 
+        action.recipientId, 
+        action.message
+      );
+    case SET_READ_MESSAGES: 
+      return setReadMessagesInStore(
+        state,
+        action.readCount,
+        action.conversationId
+      )
+    case SET_LATEST_READ: 
+      return setLatestReadMessageInStore(
+        state,
+        action.conversationId,
+        action.messageId
+      )
     default:
       return state;
   }
