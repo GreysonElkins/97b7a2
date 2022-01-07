@@ -43,4 +43,24 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+router.patch('/read-status', async (req, res, next) => {
+  try {
+    const messageIds = req.body.messageIds
+    const messages = await Message.findAll({
+      where: { id: messageIds },
+      include: [{ model: Conversation, attributes: ['user1Id', 'user2Id'] }],
+    })
+    const { user1Id, user2Id } = messages[0].dataValues.conversation.dataValues
+    if (!req.user) {
+      return res.sendStatus(401)
+    } else if (req.user.id !== user1Id && req.user.id !== user2Id) {
+      return res.sendStatus(403)
+    }
+    await Message.update({ read: true }, { where: { id: messageIds } })
+    return res.sendStatus(204)
+  } catch (error) {
+    next(error)
+  }
+})
+
 module.exports = router;
